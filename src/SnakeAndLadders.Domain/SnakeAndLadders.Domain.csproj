@@ -6,8 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Handler\" />
-    <Folder Include="Properties\" />
+    <Compile Remove="Handler\**" />
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Handler\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Handler\**" />
+    <None Remove="Properties\**" />
   </ItemGroup>
 
 </Project>

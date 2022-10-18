@@ -45,6 +45,10 @@ namespace SnakeAndLadders.Domain.Services
             if (token == null)
                 throw new Exception($"Token {tokenId} not on board");
             token.Tile += numTiles;
+            if(token.Tile > BoardSize)
+                token.Tile -= numTiles;
+            if (token.Tile == BoardSize)
+                WinnerFound?.Invoke(this, token);
             TokenUpdated?.Invoke(this, token);
         }
 

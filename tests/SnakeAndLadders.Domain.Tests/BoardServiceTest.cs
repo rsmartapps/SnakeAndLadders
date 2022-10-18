@@ -77,5 +77,52 @@ namespace SnakeAndLadders.Domain.Tests
             }
 
         }
+
+        [Fact]
+        public void GivenGameStarted_WhenTokenMoves_ThenIsSquare100_ThenPlayerWins()
+        {
+            bool winnerInvoked = false;
+            // Arange
+            var expects = 100;
+            var players = fixture.Create<Player>();
+            var token = new Token() { Id = players.TokenId, Tile = 97 };
+            var board = new BoardService(100, new List<Token> { token, new Token { Id = 321 } });
+            board.SubscribeWinnerFound((sender, args) =>
+            {
+                // Assert
+                args.Id.Should().Be(token.Id);
+                args.Tile.Should().Be(expects);
+                winnerInvoked = true;
+            });
+            // Act
+            board.MoveToken(players.TokenId, 3);
+
+            // Assert
+            winnerInvoked.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenGameStarted_WhenTokenMoves_ThenIsSquare100_ThenPlayerStillAtSquare97()
+        {
+            // Arange
+            bool winnerInvoked = false;
+            var expects = 97;
+            var players = fixture.Create<Player>();
+            var token = new Token() { Id = players.TokenId, Tile = 97 };
+            var board = new BoardService(100, new List<Token> { token, new Token { Id = 321 } });
+            board.SubscribeWinnerFound((sender, args) =>
+            {
+                // Assert
+                args.Id.Should().Be(token.Id);
+                args.Tile.Should().Be(expects);
+                winnerInvoked = true;
+            });
+            // Act
+            board.MoveToken(players.TokenId, 4);
+
+            // Assert
+            winnerInvoked.Should().BeFalse();
+            board.GetToken(players.TokenId).Tile.Should().Be(expects);
+        }
     }
 }
